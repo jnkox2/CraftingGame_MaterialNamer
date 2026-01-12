@@ -3,41 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material Designer Pro</title>
+    <title>Material Designer Pro - Light Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #121212; color: #e0e0e0; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card { background-color: #1e1e1e; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
-        .form-label { color: #aaa; font-size: 0.85rem; margin-bottom: 2px; }
-        .form-control, .form-select { background-color: #2d2d2d; border: 1px solid #444; color: #fff; }
-        .form-control:focus, .form-select:focus { background-color: #333; border-color: #0d6efd; color: #fff; box-shadow: none; }
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
-        .element-row { background: #252525; padding: 10px; border-radius: 5px; margin-bottom: 5px; border-left: 3px solid #0d6efd; }
-        .record-item { background: #1e1e1e; border: 1px solid #333; transition: 0.2s; cursor: pointer; }
-        .record-item:hover { background: #252525; }
-        hr { border-color: #444; }
-        .rarity-Legendary { color: #ff8000; font-weight: bold; }
-        .rarity-Epic { color: #a335ee; font-weight: bold; }
-        .rarity-Rare { color: #0070dd; font-weight: bold; }
+        body { background-color: #ffffff; color: #212529; padding: 20px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        .card { background-color: #fcfcfc; border: 1px solid #dee2e6; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .form-label { color: #495057; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+        .form-control, .form-select { border: 1px solid #ced4da; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; }
+        .element-row { background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #e9ecef; border-left: 4px solid #0d6efd; }
+        .record-item { background: #ffffff; border: 1px solid #dee2e6; transition: all 0.2s ease; cursor: pointer; margin-bottom: 10px; }
+        .record-item:hover { border-color: #0d6efd; background-color: #f0f7ff; }
+        .section-title { color: #0d6efd; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+        
+        /* Rarity Colors based on common RPG standards */
+        .rarity-Legendary { color: #d97706; font-weight: bold; }
+        .rarity-Epic { color: #9333ea; font-weight: bold; }
+        .rarity-Rare { color: #2563eb; font-weight: bold; }
+        .rarity-Uncommon { color: #16a34a; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container-fluid">
     <header class="pb-3 mb-4 border-bottom d-flex justify-content-between align-items-center">
-        <span class="fs-4 text-primary fw-bold">⚒️ Material Designer <small class="text-muted fw-light">v2.0</small></span>
-        <button onclick="exportData()" class="btn btn-sm btn-outline-light">Download Materials JSON</button>
+        <span class="fs-4 text-dark fw-bold">🛠 Material Designer <small class="text-muted fw-light">v2.1</small></span>
+        <div>
+            <button onclick="exportData()" class="btn btn-sm btn-dark">Download JSON</button>
+        </div>
     </header>
 
     <div class="row">
         <div class="col-xl-8">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body p-4">
                     <form id="materialForm">
-                        <div class="row g-3 mb-3">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-4">
                                 <label class="form-label">Item Name</label>
-                                <input type="text" id="itemName" class="form-control" placeholder="e.g. Ancient Ember" required>
+                                <input type="text" id="itemName" class="form-control" placeholder="E.g. Star-Iron Ingot" required>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Rarity</label>
@@ -53,7 +57,7 @@
                             </div>
                         </div>
 
-                        <div class="row g-3 mb-3">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-2">
                                 <label class="form-label">Color</label>
                                 <select id="color" class="form-select"></select>
@@ -67,7 +71,7 @@
                                 <input type="number" id="levelRequirement" class="form-control" value="0">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">Cost (Gold)</label>
+                                <label class="form-label">Cost</label>
                                 <input type="number" id="cost" class="form-control" value="0">
                             </div>
                             <div class="col-md-3">
@@ -78,34 +82,32 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <h6 class="text-info border-bottom pb-1 mb-3">StatSheet (Base Parameters)</h6>
+                                <div class="section-title">Base Statistics</div>
                                 <div class="stat-grid">
                                     <div><label class="form-label">HP</label><input type="number" id="hp" class="form-control" value="0"></div>
-                                    <div><label class="form-label">Dura.</label><input type="number" id="durability" class="form-control" value="0"></div>
+                                    <div><label class="form-label">Durability</label><input type="number" id="durability" class="form-control" value="0"></div>
                                     <div><label class="form-label">AD</label><input type="number" id="ad" class="form-control" value="0"></div>
                                     <div><label class="form-label">AP</label><input type="number" id="ap" class="form-control" value="0"></div>
-                                    <div><label class="form-label">Atk Spd</label><input type="number" step="0.01" id="atkSpeed" class="form-control" value="0"></div>
-                                    <div><label class="form-label">Crit %</label><input type="number" step="0.01" id="critChance" class="form-control" value="0"></div>
-                                    <div><label class="form-label">Agility</label><input type="number" id="agility" class="form-control" value="0"></div>
-                                    <div><label class="form-label">Luck</label><input type="number" id="luck" class="form-control" value="0"></div>
+                                    <div><label class="form-label">Atk Spd</label><input type="number" step="0.1" id="atkSpeed" class="form-control" value="0"></div>
+                                    <div><label class="form-label">Crit %</label><input type="number" step="0.1" id="critChance" class="form-control" value="0"></div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <h6 class="text-info border-bottom pb-1 mb-3">Elements (List&lt;Element&gt;)</h6>
+                                <div class="section-title">Elements (List&lt;Element&gt;)</div>
                                 <div id="elementContainer"></div>
-                                <button type="button" onclick="addElementRow()" class="btn btn-sm btn-outline-info w-100">+ Add Element Influence</button>
+                                <button type="button" onclick="addElementRow()" class="btn btn-sm btn-outline-primary w-100">+ Add Element Pair</button>
                             </div>
                         </div>
 
                         <div class="mt-4">
-                            <label class="form-label">Description</label>
-                            <textarea id="description" class="form-control" rows="2"></textarea>
+                            <label class="form-label">Material Description</label>
+                            <textarea id="description" class="form-control" rows="3"></textarea>
                         </div>
 
-                        <div class="mt-4 d-flex gap-2">
-                            <button type="button" onclick="saveMaterial()" class="btn btn-primary px-4">Save to Library</button>
-                            <button type="reset" class="btn btn-outline-secondary">New Form</button>
+                        <div class="mt-4 pt-3 border-top">
+                            <button type="button" onclick="saveMaterial()" class="btn btn-primary px-5">Save Record</button>
+                            <button type="reset" class="btn btn-link text-muted" onclick="document.getElementById('elementContainer').innerHTML=''">Clear Form</button>
                         </div>
                     </form>
                 </div>
@@ -113,7 +115,7 @@
         </div>
 
         <div class="col-xl-4">
-            <h5 class="mb-3">Material Library</h5>
+            <h5 class="fw-bold mb-3">Saved Materials</h5>
             <div id="materialLibrary" class="list-group"></div>
         </div>
     </div>
@@ -158,16 +160,16 @@
         div.innerHTML = `
             <select class="form-select form-select-sm el-type">${options}</select>
             <input type="number" class="form-control form-control-sm el-val" style="width: 80px;" value="${valueVal}">
-            <button type="button" class="btn btn-sm btn-danger" onclick="document.getElementById('el-${rowId}').remove()">×</button>
+            <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="document.getElementById('el-${rowId}').remove()">✕</button>
         `;
         container.appendChild(div);
     }
 
-    let library = JSON.parse(localStorage.getItem('materials_db') || '[]');
+    let library = JSON.parse(localStorage.getItem('materials_db_v2') || '[]');
 
     function saveMaterial() {
         const name = document.getElementById('itemName').value;
-        if(!name) return alert("Item Name is required!");
+        if(!name) return alert("Please enter an Item Name");
 
         const elements = [];
         document.querySelectorAll('.element-row').forEach(row => {
@@ -195,15 +197,13 @@
                 ad: parseFloat(document.getElementById('ad').value),
                 ap: parseFloat(document.getElementById('ap').value),
                 atkSpeed: parseFloat(document.getElementById('atkSpeed').value),
-                critChance: parseFloat(document.getElementById('critChance').value),
-                agility: parseFloat(document.getElementById('agility').value),
-                luck: parseFloat(document.getElementById('luck').value)
+                critChance: parseFloat(document.getElementById('critChance').value)
             },
             description: document.getElementById('description').value
         };
 
         library.push(material);
-        localStorage.setItem('materials_db', JSON.stringify(library));
+        localStorage.setItem('materials_db_v2', JSON.stringify(library));
         renderLibrary();
         document.getElementById('materialForm').reset();
         document.getElementById('elementContainer').innerHTML = '';
@@ -212,30 +212,36 @@
     function renderLibrary() {
         const list = document.getElementById('materialLibrary');
         list.innerHTML = '';
-        library.forEach((item, index) => {
-            const elBadges = item.element.filter(e => e.element !== 'None').map(e => 
-                `<span class="badge bg-dark text-info me-1">${e.element} ${e.value}</span>`
+        library.forEach((item) => {
+            const badges = item.element.filter(e => e.element !== 'None').map(e => 
+                `<span class="badge bg-light text-primary border me-1">${e.element} +${e.value}</span>`
             ).join('');
 
-            list.innerHTML += `
-                <div class="list-group-item record-item p-3 mb-2 rounded">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-0 rarity-${item.rarity}">${item.itemName}</h6>
-                            <small class="text-muted">${item.location} • Cost: ${item.cost} • Weight: ${item.weight}</small>
+            const li = document.createElement('div');
+            li.className = 'list-group-item record-item p-3 rounded shadow-sm';
+            li.innerHTML = `
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="rarity-${item.rarity} small text-uppercase fw-bold" style="font-size: 0.7rem">${item.rarity}</div>
+                        <h6 class="mb-1 fw-bold text-dark">${item.itemName}</h6>
+                        <div class="text-muted" style="font-size: 0.8rem">
+                            ${item.location} | Cost: ${item.cost} | Wgt: ${item.weight}
                         </div>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${item.id})">Del</button>
                     </div>
-                    <div class="mt-2">${elBadges}</div>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${item.id})">×</button>
                 </div>
+                <div class="mt-2">${badges}</div>
             `;
+            list.appendChild(li);
         });
     }
 
     function deleteItem(id) {
-        library = library.filter(i => i.id !== id);
-        localStorage.setItem('materials_db', JSON.stringify(library));
-        renderLibrary();
+        if(confirm("Delete this material?")) {
+            library = library.filter(i => i.id !== id);
+            localStorage.setItem('materials_db_v2', JSON.stringify(library));
+            renderLibrary();
+        }
     }
 
     function exportData() {
@@ -243,7 +249,7 @@
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'Materials_Database.json';
+        a.download = 'Items_Export.json';
         a.click();
     }
 
