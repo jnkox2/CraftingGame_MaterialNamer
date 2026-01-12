@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Designer Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #121212; color: #e0e0e0; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { background-color: #1e1e1e; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        .form-label { color: #aaa; font-size: 0.85rem; margin-bottom: 2px; }
+        .form-control, .form-select { background-color: #2d2d2d; border: 1px solid #444; color: #fff; }
+        .form-control:focus, .form-select:focus { background-color: #333; border-color: #0d6efd; color: #fff; box-shadow: none; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+        .element-row { background: #252525; padding: 10px; border-radius: 5px; margin-bottom: 5px; border-left: 3px solid #0d6efd; }
+        .record-item { background: #1e1e1e; border: 1px solid #333; transition: 0.2s; cursor: pointer; }
+        .record-item:hover { background: #252525; }
+        hr { border-color: #444; }
+        .rarity-Legendary { color: #ff8000; font-weight: bold; }
+        .rarity-Epic { color: #a335ee; font-weight: bold; }
+        .rarity-Rare { color: #0070dd; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <header class="pb-3 mb-4 border-bottom d-flex justify-content-between align-items-center">
+        <span class="fs-4 text-primary fw-bold">⚒️ Material Designer <small class="text-muted fw-light">v2.0</small></span>
+        <button onclick="exportData()" class="btn btn-sm btn-outline-light">Download Materials JSON</button>
+    </header>
+
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-body">
+                    <form id="materialForm">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Item Name</label>
+                                <input type="text" id="itemName" class="form-control" placeholder="e.g. Ancient Ember" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Rarity</label>
+                                <select id="rarity" class="form-select"></select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Region (Location)</label>
+                                <select id="location" class="form-select"></select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Texture</label>
+                                <select id="texture" class="form-select"></select>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-2">
+                                <label class="form-label">Color</label>
+                                <select id="color" class="form-select"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Source</label>
+                                <select id="source" class="form-select"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Lvl Req</label>
+                                <input type="number" id="levelRequirement" class="form-control" value="0">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Cost (Gold)</label>
+                                <input type="number" id="cost" class="form-control" value="0">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Weight</label>
+                                <input type="number" id="weight" class="form-control" value="0">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-info border-bottom pb-1 mb-3">StatSheet (Base Parameters)</h6>
+                                <div class="stat-grid">
+                                    <div><label class="form-label">HP</label><input type="number" id="hp" class="form-control" value="0"></div>
+                                    <div><label class="form-label">Dura.</label><input type="number" id="durability" class="form-control" value="0"></div>
+                                    <div><label class="form-label">AD</label><input type="number" id="ad" class="form-control" value="0"></div>
+                                    <div><label class="form-label">AP</label><input type="number" id="ap" class="form-control" value="0"></div>
+                                    <div><label class="form-label">Atk Spd</label><input type="number" step="0.01" id="atkSpeed" class="form-control" value="0"></div>
+                                    <div><label class="form-label">Crit %</label><input type="number" step="0.01" id="critChance" class="form-control" value="0"></div>
+                                    <div><label class="form-label">Agility</label><input type="number" id="agility" class="form-control" value="0"></div>
+                                    <div><label class="form-label">Luck</label><input type="number" id="luck" class="form-control" value="0"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h6 class="text-info border-bottom pb-1 mb-3">Elements (List&lt;Element&gt;)</h6>
+                                <div id="elementContainer"></div>
+                                <button type="button" onclick="addElementRow()" class="btn btn-sm btn-outline-info w-100">+ Add Element Influence</button>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="form-label">Description</label>
+                            <textarea id="description" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="button" onclick="saveMaterial()" class="btn btn-primary px-4">Save to Library</button>
+                            <button type="reset" class="btn btn-outline-secondary">New Form</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4">
+            <h5 class="mb-3">Material Library</h5>
+            <div id="materialLibrary" class="list-group"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const Enums = {
+        ItemRarity: ["Common", "Uncommon", "Rare", "Epic", "Legendary"],
+        ItemTexture: ["Wood", "Stone", "Metal", "Gem", "Fuel", "Thread", "Cloth", "Special"],
+        ItemElement: ["None", "Normal", "Fire", "Water", "Earth", "Air", "Electric", "Ice", "Poison", "Holy", "Dark", "Chaos", "Void"],
+        ItemSource: ["Crafting", "Loot", "Treasure", "Quest", "Trade"],
+        ItemColor: ["Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Brown", "Black", "White", "Grey", "None"],
+        ItemRegion: ["Rheonia", "Deimora", "Iorath", "Thalassia", "Arionis", "Kerbron"]
+    };
+
+    function populateDropdowns() {
+        const mapping = {
+            'rarity': Enums.ItemRarity,
+            'texture': Enums.ItemTexture,
+            'location': Enums.ItemRegion,
+            'color': Enums.ItemColor,
+            'source': Enums.ItemSource
+        };
+
+        for (let id in mapping) {
+            const select = document.getElementById(id);
+            mapping[id].forEach(val => {
+                select.innerHTML += `<option value="${val}">${val}</option>`;
+            });
+        }
+    }
+
+    function addElementRow(elementVal = "None", valueVal = 0) {
+        const container = document.getElementById('elementContainer');
+        const rowId = Date.now();
+        const div = document.createElement('div');
+        div.className = 'element-row d-flex gap-2 align-items-center';
+        div.id = `el-${rowId}`;
+        
+        let options = Enums.ItemElement.map(e => `<option value="${e}" ${e === elementVal ? 'selected' : ''}>${e}</option>`).join('');
+        
+        div.innerHTML = `
+            <select class="form-select form-select-sm el-type">${options}</select>
+            <input type="number" class="form-control form-control-sm el-val" style="width: 80px;" value="${valueVal}">
+            <button type="button" class="btn btn-sm btn-danger" onclick="document.getElementById('el-${rowId}').remove()">×</button>
+        `;
+        container.appendChild(div);
+    }
+
+    let library = JSON.parse(localStorage.getItem('materials_db') || '[]');
+
+    function saveMaterial() {
+        const name = document.getElementById('itemName').value;
+        if(!name) return alert("Item Name is required!");
+
+        const elements = [];
+        document.querySelectorAll('.element-row').forEach(row => {
+            elements.push({
+                element: row.querySelector('.el-type').value,
+                value: parseInt(row.querySelector('.el-val').value)
+            });
+        });
+
+        const material = {
+            id: Date.now(),
+            itemName: name,
+            rarity: document.getElementById('rarity').value,
+            texture: document.getElementById('texture').value,
+            location: document.getElementById('location').value,
+            color: document.getElementById('color').value,
+            source: document.getElementById('source').value,
+            levelRequirement: parseInt(document.getElementById('levelRequirement').value),
+            cost: parseInt(document.getElementById('cost').value),
+            weight: parseInt(document.getElementById('weight').value),
+            element: elements,
+            itemStats: {
+                hp: parseFloat(document.getElementById('hp').value),
+                durability: parseFloat(document.getElementById('durability').value),
+                ad: parseFloat(document.getElementById('ad').value),
+                ap: parseFloat(document.getElementById('ap').value),
+                atkSpeed: parseFloat(document.getElementById('atkSpeed').value),
+                critChance: parseFloat(document.getElementById('critChance').value),
+                agility: parseFloat(document.getElementById('agility').value),
+                luck: parseFloat(document.getElementById('luck').value)
+            },
+            description: document.getElementById('description').value
+        };
+
+        library.push(material);
+        localStorage.setItem('materials_db', JSON.stringify(library));
+        renderLibrary();
+        document.getElementById('materialForm').reset();
+        document.getElementById('elementContainer').innerHTML = '';
+    }
+
+    function renderLibrary() {
+        const list = document.getElementById('materialLibrary');
+        list.innerHTML = '';
+        library.forEach((item, index) => {
+            const elBadges = item.element.filter(e => e.element !== 'None').map(e => 
+                `<span class="badge bg-dark text-info me-1">${e.element} ${e.value}</span>`
+            ).join('');
+
+            list.innerHTML += `
+                <div class="list-group-item record-item p-3 mb-2 rounded">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-0 rarity-${item.rarity}">${item.itemName}</h6>
+                            <small class="text-muted">${item.location} • Cost: ${item.cost} • Weight: ${item.weight}</small>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${item.id})">Del</button>
+                    </div>
+                    <div class="mt-2">${elBadges}</div>
+                </div>
+            `;
+        });
+    }
+
+    function deleteItem(id) {
+        library = library.filter(i => i.id !== id);
+        localStorage.setItem('materials_db', JSON.stringify(library));
+        renderLibrary();
+    }
+
+    function exportData() {
+        const blob = new Blob([JSON.stringify(library, null, 2)], {type : 'application/json'});
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Materials_Database.json';
+        a.click();
+    }
+
+    window.onload = () => {
+        populateDropdowns();
+        renderLibrary();
+    };
+</script>
+
+</body>
+</html>
